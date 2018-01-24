@@ -13,7 +13,9 @@ Current spring webflux(version 5.0.3) doesn't support view forwarding feature in
 This fork implements it,so same as spring mvc controller,you 
 can use this feature in webflux controller now.
  
- import org.springframework.ui.Model;  
+ import org.springframework.stereotype.Controller;   
+ import org.springframework.ui.Model;    
+ import org.springframework.web.bind.annotation.GetMapping;    
  import org.springframework.web.server.ServerWebExchange;  
  import reactor.core.publisher.Mono; 
  
