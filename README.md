@@ -8,9 +8,10 @@ applications in a wide range of scenarios and architectures. Please read the
 [Overview](https://docs.spring.io/spring/docs/current/spring-framework-reference/overview.html#spring-introduction)
 section in the reference for a more complete introduction.
 
-## Forward feature of webflux controller
-Current spring webflux(version 5.0.3) doesn't support forward feature in webflux controller. This fork implements it,so like spring mvc controller,you 
-can use forward feature in webflux controller now.
+## View forwarding feature in webflux controller
+Current spring webflux(version 5.0.3) doesn't support view forwarding feature in webflux controller,see [spring jira](https://jira.spring.io/browse/SPR-14537).   
+This fork implements it,so same as spring mvc controller,you 
+can use this feature in webflux controller now.
  
  import org.springframework.ui.Model;  
  import org.springframework.web.server.ServerWebExchange;  
