@@ -8,8 +8,8 @@ applications in a wide range of scenarios and architectures. Please read the
 [Overview](https://docs.spring.io/spring/docs/current/spring-framework-reference/overview.html#spring-introduction)
 section in the reference for a more complete introduction.
 
-## forward feature of webflux controller
-Current spring webflux(version 5.0.3) doesn't support forward feature in webflux controller. This fork implements this feature,so like spring mvc controller,you 
+## Forward feature of webflux controller
+Current spring webflux(version 5.0.3) doesn't support forward feature in webflux controller. This fork implements it,so like spring mvc controller,you 
 can use forward feature in webflux controller now.
  
  import org.springframework.ui.Model;  
@@ -34,7 +34,7 @@ can use forward feature in webflux controller now.
     
     @GetMapping("webflux")
 	public Mono<String> webflux(ServerWebExchange exchange) {
-	    System.out.println("/webflux");
+	    System.out.println("webflux");
 		return Mono.just("forward:forward-view");
 	}
 	
@@ -44,9 +44,12 @@ can use forward feature in webflux controller now.
 	    model.addAttribute("content", "webflux forward view");
 		return "view1";
     }
-}    
+} 
+       
     
-    
+Test:  
+ curl http://127.0.0.1:8080/  
+ curl http://127.0.0.1:8080/webflux    
     
 
 ## License
