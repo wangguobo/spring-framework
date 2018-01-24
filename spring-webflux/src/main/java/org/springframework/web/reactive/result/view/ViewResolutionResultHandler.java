@@ -211,6 +211,11 @@ public class ViewResolutionResultHandler extends HandlerResultHandlerSupport
 					if (returnValue == NO_VALUE || Void.class.equals(clazz) || void.class.equals(clazz)) {
 						viewsMono = resolveViews(getDefaultViewName(exchange), locale);
 					}
+					else if(CharSequence.class.isAssignableFrom(clazz) && isForwardView(returnValue)){
+						ServerWebExchange forwardExchange = ForwardViewUtil.generateForwardExchange(returnValue.toString(), exchange);
+						updateBindingContext(result.getBindingContext(),forwardExchange);
+				        return ForwardViewUtil.forward(forwardExchange);
+					}
 					else if (CharSequence.class.isAssignableFrom(clazz) && !hasModelAnnotation(parameter)) {
 						viewsMono = resolveViews(returnValue.toString(), locale);
 					}
@@ -333,5 +338,8 @@ public class ViewResolutionResultHandler extends HandlerResultHandlerSupport
 				.flatMap(view -> view.getSupportedMediaTypes().stream())
 				.collect(Collectors.toList());
 	}
-
+	
+	private boolean isForwardView(Object returnValue) {
+		return ForwardViewUtil.isForwardView(returnValue.toString());
+	}
 }
