@@ -26,6 +26,7 @@ import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.Ordered;
 import org.springframework.core.ReactiveAdapterRegistry;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.converter.Converter;
@@ -58,10 +59,12 @@ import org.springframework.web.reactive.result.method.annotation.RequestMappingH
 import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.reactive.result.method.annotation.ResponseBodyResultHandler;
 import org.springframework.web.reactive.result.method.annotation.ResponseEntityResultHandler;
+import org.springframework.web.reactive.result.view.ForwardViewWebFilter;
 import org.springframework.web.reactive.result.view.ViewResolutionResultHandler;
 import org.springframework.web.reactive.result.view.ViewResolver;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebExceptionHandler;
+import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.handler.ResponseStatusExceptionHandler;
 import org.springframework.web.server.i18n.AcceptHeaderLocaleContextResolver;
 import org.springframework.web.server.i18n.LocaleContextResolver;
@@ -431,7 +434,13 @@ public class WebFluxConfigurationSupport implements ApplicationContextAware {
 
 		return handler;
 	}
-
+    
+	@Bean
+	@Order(Ordered.HIGHEST_PRECEDENCE+10)
+	public WebFilter forwardViewWebFilter() {
+		return new ForwardViewWebFilter();
+	}
+	
 	/**
 	 * Callback for building the {@link ViewResolverRegistry}. This method is final,
 	 * use {@link #configureViewResolvers} to customize view resolvers.

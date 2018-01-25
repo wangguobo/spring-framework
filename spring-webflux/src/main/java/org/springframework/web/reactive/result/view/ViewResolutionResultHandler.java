@@ -214,6 +214,10 @@ public class ViewResolutionResultHandler extends HandlerResultHandlerSupport
 					else if (CharSequence.class.isAssignableFrom(clazz) && !hasModelAnnotation(parameter)) {
 						viewsMono = resolveViews(returnValue.toString(), locale);
 					}
+					else if(CharSequence.class.isAssignableFrom(clazz) && isForwardView(returnValue)){
+						//updateBindingContext(...);
+						return ForwardViewUtil.forward(returnValue.toString(),exchange);
+					}
 					else if (Rendering.class.isAssignableFrom(clazz)) {
 						Rendering render = (Rendering) returnValue;
 						HttpStatus status = render.status();
@@ -333,5 +337,9 @@ public class ViewResolutionResultHandler extends HandlerResultHandlerSupport
 				.flatMap(view -> view.getSupportedMediaTypes().stream())
 				.collect(Collectors.toList());
 	}
-
+	
+	private boolean isForwardView(Object returnValue) {
+		return ForwardViewUtil.isForwardView(returnValue.toString());
+	}
+	
 }

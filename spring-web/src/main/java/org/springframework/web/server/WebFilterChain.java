@@ -32,5 +32,18 @@ public interface WebFilterChain {
 	 * @return {@code Mono<Void>} to indicate when request handling is complete
 	 */
 	Mono<Void> filter(ServerWebExchange exchange);
-
+	
+	/**
+	 * Delegate to the first {@code WebFilter} in the chain to replay rquest.
+	 * @param exchange the current server exchange
+	 * @return {@code Mono<Void>} to indicate when request handling is complete
+	 */
+	Mono<Void> replayForward(ServerWebExchange exchange);
+	
+	/**
+	 * skip all of {@code WebFilter},direct delegate to the handler.
+	 * @param exchange the current server exchange
+	 * @return {@code Mono<Void>} to indicate when request handling is complete
+	 */
+	Mono<Void> throughForward(ServerWebExchange exchange);
 }

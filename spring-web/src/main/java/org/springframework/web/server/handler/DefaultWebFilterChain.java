@@ -79,5 +79,26 @@ public class DefaultWebFilterChain implements WebFilterChain {
 			}
 		});
 	}
+	
+	@Override
+	public Mono<Void> replayForward(ServerWebExchange exchange) {
+		return Mono.defer(() -> {
+			if ( 0 < this.filters.size()) {
+				WebFilter filter = this.filters.get(0);
+				WebFilterChain chain = new DefaultWebFilterChain(this, 1);
+				return filter.filter(exchange, chain);
+			}
+			else {
+				return this.handler.handle(exchange);
+			}
+		});
+	}
+    
+	@Override
+	public Mono<Void> throughForward(ServerWebExchange exchange) {
+		return Mono.defer(() -> {
+			return this.handler.handle(exchange);
+		});
+	}
 
 }
