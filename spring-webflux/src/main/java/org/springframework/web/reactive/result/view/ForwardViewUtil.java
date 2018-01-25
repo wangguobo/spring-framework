@@ -17,27 +17,33 @@ import reactor.core.publisher.Mono;
  */
 public class ForwardViewUtil {
     public static final String FORWARD_URL_PREFIX = "forward:";
-	public static final String CONTINUE_URL_PREFIX = "continue:";
+	public static final String THROUGH_URL_PREFIX = "through:";
 	public static final String FORWARD_MODE_NAME = "spring.webflux.forward.mode";
 	public static final String FORWARD_MODE_REPLAY = "replay";
-	public static final String FORWARD_MODE_CONTINUE = "continue";
+	public static final String FORWARD_MODE_THROUGH = "through";
 	public static final String ABSOLUTE_URL_PREFIX = "/";
 	
 
 	public static boolean isForwardView(String viewName) {
-		return viewName.startsWith(FORWARD_URL_PREFIX) || viewName.startsWith(CONTINUE_URL_PREFIX) ;
+		return viewName.startsWith(FORWARD_URL_PREFIX) || viewName.startsWith(THROUGH_URL_PREFIX) ;
 	}
 	
-	public static  ServerWebExchange generateForwardExchange(String forwardView,ServerWebExchange originExchange)
+	public static  Mono<Void> forward(String forwardView,ServerWebExchange originExchange)
+	{
+		ServerWebExchange forwardExchange = generateForwardExchange(forwardView,originExchange);
+		return forwardTo(forwardExchange);
+	}
+	
+	private static  ServerWebExchange generateForwardExchange(String forwardView,ServerWebExchange originExchange)
 	{
 		String forwardMode = FORWARD_MODE_REPLAY;
 		String forwardTargetUrl;
 		if(forwardView.startsWith(FORWARD_URL_PREFIX)) {
 			forwardTargetUrl = forwardView.substring(FORWARD_URL_PREFIX.length());
 		}
-		else if(forwardView.startsWith(CONTINUE_URL_PREFIX)) {
-			forwardTargetUrl = forwardView.substring(CONTINUE_URL_PREFIX.length());
-			forwardMode = FORWARD_MODE_CONTINUE;
+		else if(forwardView.startsWith(THROUGH_URL_PREFIX)) {
+			forwardTargetUrl = forwardView.substring(THROUGH_URL_PREFIX.length());
+			forwardMode = FORWARD_MODE_THROUGH;
 		}
 		else {
 			throw new UnsupportedOperationException("this forward not currently supported");
@@ -61,14 +67,14 @@ public class ForwardViewUtil {
         return forwardWebExchange;
 	}
 	
-	public static Mono<Void> forward(ServerWebExchange forwardExchange) {
+	private static Mono<Void> forwardTo(ServerWebExchange forwardExchange) {
 		WebFilterChain webFilterChain = (WebFilterChain)forwardExchange.getAttributes().get(ForwardViewWebFilter.WEBFLUX_FILTERCHAIN_NAME);
 		String forwardMode = (String)forwardExchange.getAttribute(FORWARD_MODE_NAME);
 		if(FORWARD_MODE_REPLAY.equals(forwardMode) ) {
 			return webFilterChain.replayForward(forwardExchange).then();
 		}
-		else if(FORWARD_MODE_CONTINUE.equals(forwardMode)){
-			return webFilterChain.continueForward(forwardExchange).then();
+		else if(FORWARD_MODE_THROUGH.equals(forwardMode)){
+			return webFilterChain.throughForward(forwardExchange).then();
 		}
 		else {
 			throw new IllegalArgumentException("this forward mode not currently supported");

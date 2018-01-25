@@ -212,9 +212,8 @@ public class ViewResolutionResultHandler extends HandlerResultHandlerSupport
 						viewsMono = resolveViews(getDefaultViewName(exchange), locale);
 					}
 					else if(CharSequence.class.isAssignableFrom(clazz) && isForwardView(returnValue)){
-						ServerWebExchange forwardExchange = ForwardViewUtil.generateForwardExchange(returnValue.toString(), exchange);
-						updateBindingContext(result.getBindingContext(),forwardExchange);
-				        return ForwardViewUtil.forward(forwardExchange);
+						//updateBindingContext(...);
+						return ForwardViewUtil.forward(returnValue.toString(),exchange);
 					}
 					else if (CharSequence.class.isAssignableFrom(clazz) && !hasModelAnnotation(parameter)) {
 						viewsMono = resolveViews(returnValue.toString(), locale);

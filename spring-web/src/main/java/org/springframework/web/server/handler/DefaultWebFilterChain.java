@@ -96,7 +96,7 @@ public class DefaultWebFilterChain implements WebFilterChain {
 	}
     
 	@Override
-	public Mono<Void> continueForward(ServerWebExchange exchange) {
+	public Mono<Void> throughForward(ServerWebExchange exchange) {
 		return Mono.defer(() -> {
 			return this.handler.handle(exchange);
 		});

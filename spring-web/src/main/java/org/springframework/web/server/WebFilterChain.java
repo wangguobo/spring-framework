@@ -46,5 +46,5 @@ public interface WebFilterChain {
 	 * @param exchange the current server exchange
 	 * @return {@code Mono<Void>} to indicate when request handling is complete
 	 */
-	Mono<Void> continueForward(ServerWebExchange exchange);
+	Mono<Void> throughForward(ServerWebExchange exchange);
 }
